@@ -1,0 +1,129 @@
+<h2>Products - Real Time</h2>
+<br>
+
+
+{{!-- Formulario para dar de alta Productos --}}
+
+<form  id="formProducts">
+
+    <div class="form-group  d-flex align-items-center flex-column">
+
+        <div class="col-md-4 mb-3">
+            <label for="valtitle">Title:</label>
+            <input type="text" name="title" class="form-control " id="valtitle" placeholder="Title" required>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label for="valdescripcion">Descripcion:</label>
+            <input type="text" name="descripcion" class="form-control " id="valdescripcion" placeholder="Descripción"
+                required>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label for="valPrice">Price:</label>
+
+            <input type="number" name="price" class="form-control " id="valPrice" placeholder="Price" required>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label for="valThumbnail">Thumbnail:</label>
+            <input type="text" name="thumbnail" class="form-control" id="valThumbnail" placeholder="Thumbnail">
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label for="valCode">Code:</label>
+            <input type="text" name="code" id="valCode" class="form-control " placeholder="Code" required>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label for="valStock">Stock:</label>
+            <input type="number" name="stock" id="valStock" class="form-control " placeholder="Stock" required>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </div>
+</form>
+
+<hr>
+
+{{!-- Tabla para visualización de los productos --}}
+<div class="table-responsive-sm">
+    <table  class="table table-hover table-borderless">
+        <thead>
+            <tr class="table-active">
+                {{!-- <td>Id</td> --}}
+                <th scope="col">Title</th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Price</th>
+                <th scope="col">Thumbnail</th>
+                <th scope="col">Code</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Acciones</th>
+
+            </tr>
+
+        </thead>
+        <tbody id="tbody">
+            {{#each products}}
+            <tr>
+                {{!-- <td>{{this.id}}</td> --}}
+                <td>{{this.title}}</td>
+                <td>{{this.descripcion}}</td>
+                <td>{{this.price}}</td>
+                <td>{{this.thumbnail}}</td>
+                <td>{{this.code}}</td>
+                <td>{{this.stock}}</td>
+                <td><a href="/api/products/delete/{{this._id}}">🗑</a></td>
+            </tr>
+            {{/each}}
+        </tbody>
+
+
+    </table>
+</div>
+{{!-- instanciamos socket.io --}}
+<script src="/socket.io/socket.io.js"> </script>
+<script>
+        const socket = io()
+
+    document.getElementById('formProducts').onsubmit=e=>{
+        e.preventDefault()
+
+   const title= document.querySelector('input[name=title]').value
+        const descripcion = document.querySelector('input[name=descripcion]').value
+        const price = parseInt(document.querySelector('input[name=price]').value)
+        const thumbnail = document.querySelector('input[name=thumbnail]').value
+        const code = document.querySelector('input[name=code]').value
+        const stock =parseInt(document.querySelector('input[name=stock]').value) 
+      
+      const product={title,descripcion,price,thumbnail,code,stock}
+      console.log("emitido desde el socket",product)
+     socket.emit('new-product',product)
+
+    }
+
+    socket.on('reload-table',productos=>{
+        console.log(productos)
+       const tbody =  document.getElementById('tbody')
+
+       let html = ''
+     productos.forEach(producto=>{
+          html += `<tr>
+         
+          <td>${producto.title}</td>
+          <td>${producto.descripcion}</td>
+          <td>${producto.price}</td>
+          <td>${producto.thumbnail}</td>
+          <td>${producto.code}</td>
+          <td>${producto.stock}</td>
+          <td><a href="/api/products/delete/{{this._id}}">🗑</a></td>
+         </tr> `
+
+
+     })
+        
+        tbody.innerHTML=html
+    })
+    
+    </script>
