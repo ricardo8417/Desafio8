@@ -43,16 +43,14 @@ router.post("/:cid/product/:pid", async (req, res) => {
   const quantity = parseInt(req.body.quantity || 1);
   try {
     let cart = await CartModel.findById(cid);
-    let productos = await productsModel.findById({ _id: pid });
+    let productos = await productsModel.findById(pid);
 
     if (!cart) {
       cart = new CartModel({ products: { pid, quantity } });
       await cart.save();
     }
     if (productos) {
-      const existProduct = cart.products.find(
-        (item) => item.pid.toString() === pid
-      );
+      const existProduct = cart.products.find((item) => item.pid.toString() === pid);
 
       if (existProduct) {
         existProduct.quantity += quantity;
@@ -67,9 +65,7 @@ router.post("/:cid/product/:pid", async (req, res) => {
     }
   } catch (e) {
     console.error("Error al guardar el producto:", e);
-    res
-      .status(500)
-      .send({ error: "Error al guardar el producto en el carrito" });
+    res.status(500).send({ error: "Error al guardar el producto en el carrito" });
   }
 });
 

@@ -4,6 +4,9 @@ import passport from "passport";
 
 const router = Router();
 
+
+
+
 router.post("/login",passport.authenticate("login", "/login"),async (req, res) => {
    
     if (!req.user) return res.status(400).send("Invalid Credentials");
@@ -32,6 +35,9 @@ router.post("/register",passport.authenticate("register", { failureRedirect: "/r
    }
 );
 
+
+
+
 router.get("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -42,9 +48,8 @@ router.get("/logout", (req, res) => {
 });
 
 router.get('/current',(req,res)=>{
-  let user =  req.session.user
-  console.log("user",user)
-  res.send(user)
+  let user = req.session.user;
+  res.send(user);
 })
 
 

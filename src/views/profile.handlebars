@@ -1,13 +1,29 @@
-<h1>Bienvenido {{first_name}} a tu perfil</h1>
-<br>
-<h2>Datos Generales:</h2>
+<div class="profile-card">
+    
+    <h2 class="profile-name">{{first_name}} {{last_name}}</h2>
+    <p class="profile-email">{{email}}</p>
+    <p class="profile-role">Rol: {{rol}}</p>
+    <div class="profile-actions">
+        {{!-- <a href="/compras">Ver Compras</a> --}}
+        <button id="logoutButton">Cerrar Sesión</button>
+    </div>
+</div>
 
-Nombre: {{first_name}}
-<br>
-Apellido: {{last_name}}
-<br>
-Edad: {{age}}
-<br>
-Email: {{email}}
-<br>
-Rol: {{rol}}
+<script>
+    const logoutButton = document.getElementById('logoutButton');
+    logoutButton.addEventListener('click', async () => {
+        try {
+            const response = await fetch('/api/sessions/logout', {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                window.location.href = '/login';
+            } else {
+                console.error('Error al cerrar sesión');
+            }
+        } catch (error) {
+            console.error('Error al comunicarse con el servidor:', error);
+        }
+    });
+</script>
+

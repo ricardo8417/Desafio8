@@ -13,6 +13,7 @@ import MongoStore from "connect-mongo"
 
 import sessionRouter from "./routes/session.router.js";
 import viewsRouter from "./routes/views.router.js";
+import cookieParser from "cookie-parser";
 
 import __dirname from './utils.js'
 
@@ -21,6 +22,21 @@ import __dirname from './utils.js'
 const app = express()
 const uri ="mongodb+srv://ricardo:Matrix39@cluster0.e5qotqq.mongodb.net/?retryWrites=true&w=majority"
 const dbName="ecommerce"
+
+//Configuración de cookies
+app.use(cookieParser('CookiesCifradas'))
+
+app.get('/set',(req,res)=>{
+  res
+  .cookie('CookiedePrueba', 'Tenemos una cookie!!',{maxAge:3000}).send('Cookie Seteada')
+  .cookie('cookieSigned','Valor de la cookie',{signed:true})//cookie cifrada
+})
+
+app.get('get',(req,res)=>{
+  const cookie=req.cookies
+  const cookieSigned=req.signedCookies
+  console.log (cookie,cookieSigned)
+})
 
 //Para traer información POST como JSON
 app.use(express.json())
@@ -50,16 +66,19 @@ mongoose.connect(uri, {dbName })
   const httpServer= app.listen(8080,()=>console.log('Listening...'));
   const io = new Server(httpServer);
 io.on("connection", (socket) => {
-  socket.on("new-product", async (product) => {
-    
-      // const productManager = productModel()
-      // await productManager.create(data)
 
+  console.log("cliente conectado");
+  socket.on("new-product", async (product) => {
+          
       await productModel.create(product);
       const dataproduct = await productModel.find().lean().exec()
       io.emit("reload-table", dataproduct);
     })
-    socket.on("new", (user) => console.log(`${user} se acaba de conectar`));
+    socket.on("new", async user => {
+      console.log(`${user} se acaba de conectar`) 
+    const userCreated = new messagesModel(user)
+          await userCreated.save()
+    })
 
 socket.on("message", async (data) => {
     try {
