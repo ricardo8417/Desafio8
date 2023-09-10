@@ -179,7 +179,8 @@ const productsNew = req.body;
 //Contador Carrito
 router.get("/cart/count", async (req, res) => {
   try {
-         const id = req.user.cartId;
+           const id = req.user?.cartId;
+           if (!id) return res.json({ count: 0 });
     console.log(id)
     const cartCount = await cartModel.findById(id);
     res.json({ count: cartCount.products.length });

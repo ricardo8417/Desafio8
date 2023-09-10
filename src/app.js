@@ -23,20 +23,20 @@ const app = express()
 const uri ="mongodb+srv://ricardo:Matrix39@cluster0.e5qotqq.mongodb.net/?retryWrites=true&w=majority"
 const dbName="ecommerce"
 
-//Configuración de cookies
-app.use(cookieParser('CookiesCifradas'))
+// //Configuración de cookies
+// app.use(cookieParser('CookiesCifradas'))
 
-app.get('/set',(req,res)=>{
-  res
-  .cookie('CookiedePrueba', 'Tenemos una cookie!!',{maxAge:3000}).send('Cookie Seteada')
-  .cookie('cookieSigned','Valor de la cookie',{signed:true})//cookie cifrada
-})
+// app.get('/set',(req,res)=>{
+//   res
+//   .cookie('CookiedePrueba', 'Tenemos una cookie!!',{maxAge:3000}).send('Cookie Seteada')
+//   .cookie('cookieSigned','Valor de la cookie',{signed:true})//cookie cifrada
+// })
 
-app.get('get',(req,res)=>{
-  const cookie=req.cookies
-  const cookieSigned=req.signedCookies
-  console.log (cookie,cookieSigned)
-})
+// app.get('get',(req,res)=>{
+//   const cookie=req.cookies
+//   const cookieSigned=req.signedCookies
+//   console.log (cookie,cookieSigned)
+// })
 
 //Para traer información POST como JSON
 app.use(express.json())
@@ -103,7 +103,7 @@ app.use(
         useNewUrlParser: true,
         useUnifiedTopology: true,
       },
-      ttl: 100,
+      ttl: 10000,
     }),
     secret: "secret",
     resave: true,

@@ -1,26 +1,13 @@
-// agregar productos al carrito
-// const addCart = (id) => {
-//   const cid = "64cc88ad1cc7179550403154";
-//   const pid = id;
-//   const requestOptions = {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({ quantity: 1 }),
-//   };
-
-
 let cart = "";
  
 const obteUser = async () => {
- await fetch("/api/session/current")
+ await fetch("http://127.0.0.1:8080/api/session/current")
  
   .then(response => response.json())
   .then(data => {
     if(data.user){
       cart = data.user.cartId
-      console.log(cart);
+      console.log("id del carrito es:",cart);
     } else {
       console.log("Usuario no registrado")
     }
@@ -30,7 +17,7 @@ obteUser()
 
 
 const addCart = (id) => {
-  const cid = cart;
+  const cid =cart;
   const pid = id;
   const requestOptions = {
     method: "POST",

@@ -47,9 +47,15 @@ router.get("/logout", (req, res) => {
   });
 });
 
-router.get('/current',(req,res)=>{
-  let user = req.session.user;
-  res.send(user);
+router.get('/current',async (req,res)=>{
+  try{
+let user = req.session.user;
+  console.log("el user es:", req.session)
+  res.json(user);
+  }catch (e){
+console.error(e)
+  }
+  
 })
 
 
