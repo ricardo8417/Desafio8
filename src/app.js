@@ -106,8 +106,8 @@ app.use(
       ttl: 10000,
     }),
     secret: "secret",
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
   })
 );
 

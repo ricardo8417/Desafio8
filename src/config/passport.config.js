@@ -30,7 +30,7 @@ const initializePassport = () => {
           console.log("User already exits" + email);
           return done(null, user);
         }
-
+let newcart = await new CartModel({ products: [] }).save();
 
         const newUser = {
           first_name: profile._json.name,
@@ -38,7 +38,7 @@ const initializePassport = () => {
           email: profile._json.email,
           age: "",
           password: "",
-          rol
+          cartId: newcart._id,
         };
         const result = await UserModel.create(newUser);
         console.log(result)

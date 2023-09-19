@@ -1,15 +1,15 @@
 let cart = "";
  
 const obteUser = async () => {
- await fetch("http://127.0.0.1:8080/api/session/current")
+ await fetch("/api/session/current")
  
   .then(response => response.json())
   .then(data => {
-    if(data.user){
-      cart = data.user.cartId
-      console.log("id del carrito es:",cart);
+    if (data._id) {
+      cart = data.cartId;
+      console.log("id del carrito es:", cart);
     } else {
-      console.log("Usuario no registrado")
+      console.log("Usuario no registrado");
     }
   })
 }
@@ -37,20 +37,13 @@ const addCart = (id) => {
     });
 };
 
-//eliminar productos del carrito
-// const deleteProduct = (id) => {
-//   const cid = "64cc88ad1cc7179550403154";
-//   const pid = id;
-//   const requestOptions = {
-//     method: "DELETE",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   };
 
-const deleteProduct = (id) => {
+
+const deleteProduct = async (id) => {
   const cid = cart;
   const pid = id;
+  console.log("id del carrito es:",cid)
+  console.log("id del producto es:", pid);
   const requestOptions = {
     method: "DELETE",
     headers: {
@@ -58,17 +51,10 @@ const deleteProduct = (id) => {
     },
   };
 
-  fetch(`/api/carts/${cid}/products/${pid}`, requestOptions)
+  fetch(`/api/carts/${cid}/product/${pid}`, requestOptions)
     .then((response) => {
-      if (response.status === 204) {
-        console.log("Producto eliminado exitosamente");
-      } else {
-        console.error(
-          "Error al eliminar el producto. Código de estado:",
-          response.status
-        );
-      }
-    })
+     console.log(response);
+         })
     .catch((error) => {
       console.error("Error al eliminar el producto:", error);
     });
